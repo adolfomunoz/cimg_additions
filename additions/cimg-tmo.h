@@ -1,5 +1,3 @@
-#pragma once
-
 //Tone mapper operators for CImg
 
 /** REINHARD'02 **/

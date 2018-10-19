@@ -1,5 +1,3 @@
-#pragma once 
-
 /** OBTAINED FROM https://www.graphics.cornell.edu/~bjw/rgbe.html **/
 
 /* THIS CODE CARRIES NO GUARANTEE OF USABILITY OR FITNESS FOR ANY PURPOSE.
@@ -458,7 +456,8 @@ const CImg<T>& save_hdr(const char* filename) const
 }
 
 CImg<T>& load_hdr(const char* filename)
-{	
+{
+	std::cerr<<"LOADING HDR : "<<filename<<std::endl;
 	if (!filename)
 		throw CImgArgumentException(_cimg_instance
 	                                    "load_hdr() : Specified filename is (null).",

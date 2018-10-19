@@ -1,3 +1,5 @@
+cmake_minimum_required(VERSION 3.10)
+
 find_package(PNG)
 if(PNG_FOUND)
 	include_directories(${PNG_INCLUDE_DIR})
@@ -40,8 +42,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
     list(APPEND cimgdisplay_defs cimg_display=2)
     list(APPEND cimg_defs cimg_OS=2)
 else(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-	set(cimgdisplay_libs ${parallel_libs} X11)
-    list(APPEND cimgdisplay_libs ${parallel_libs})
+    list(APPEND cimg_libs pthread)
     list(APPEND cimgdisplay_libs X11)
     list(APPEND cimgdisplay_defs cimg_display=1)
     list(APPEND cimg_defs cimg_OS=1)
@@ -55,7 +56,7 @@ include_directories(${CMAKE_CURRENT_LIST_DIR})
 option(BUILD_OFFLINE "Build offline" OFF)
 
 if (NOT EXTERNAL_INSTALL_LOCATION)
-	set(EXTERNAL_INSTALL_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/external
+	set(EXTERNAL_INSTALL_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/external)
 endif()
 
 if (NOT IS_DIRECTORY ${EXTERNAL_INSTALL_LOCATION})
@@ -70,7 +71,6 @@ endif()
 
 
 include(ExternalProject)
-set(EXTERNAL_INSTALL_LOCATION ${opt_SOURCE_DIR}/external)
 # callable_traits (useful for parameter-type deduction for general stuff)
 
 ExternalProject_Add(cimg
@@ -82,8 +82,20 @@ ExternalProject_Add(cimg
 )
 
 
-
 include_directories(${EXTERNAL_INSTALL_LOCATION}/CImg)
 
+######################################################################################
+# TARGETS
+######################################################################################
+if (NOT EXECUTABLE_OUTPUT_PATH)
+	set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/bin)
+endif()
 
+if (NOT IS_DIRECTORY ${EXECUTABLE_OUTPUT_PATH})
+	file(MAKE_DIRECTORY ${EXECUTABLE_OUTPUT_PATH})
+endif()
+
+add_executable(image2ppm main/image2ppm.cc)
+target_compile_definitions(image2ppm PRIVATE ${cimg_defs})
+target_link_libraries(image2ppm ${cimg_libs})
 	
