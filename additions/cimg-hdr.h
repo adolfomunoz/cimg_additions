@@ -486,7 +486,7 @@ CImg<T>& load_hdr(const char* filename)
                               filename);
 	}
 
-	this->resize(width,height,1,3,-1);
+	this->assign(width,height,1,3);
 
 	float* buffer = new float[3*width];
 
@@ -502,9 +502,10 @@ CImg<T>& load_hdr(const char* filename)
 		}
 
 		int idx = 0;
-		for (int j=0; j<width; j++,idx+=3)
-			for (int c=0;c<3;c++)
-				(*this)(j,i,c)=buffer[idx+c];
+		for (int j=0; j<width; j++,idx+=3) 
+			for (int c=0;c<3;c++) 
+				(*this)(j,i,0,c)=buffer[idx+c];
+			
 	}
 	
 	cimg::fclose(f);

@@ -15,5 +15,7 @@ int main(int argc, const char** argv) {
 
 	CImg<double> image;
 	image.load(input);
+	image.print(input);
+	
 	image.save_ppm(output,colorresolution);
 }

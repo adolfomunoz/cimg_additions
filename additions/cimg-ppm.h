@@ -42,10 +42,10 @@ CImg<T>& load_ppm(const char *const filename) {
 
       if (maxt == 0) maxt = 255;
 
-      assign(width,height,1,3); T t;
+      this->assign(width,height,1,3); T t;
       cimg_forXYC((*this),x,y,c) {
 	      f>>t;
-      	      (*this)(x,y,1,c) = (t*maxt)/colorresolution;
+      	      (*this)(x,y,0,c) = (t*maxt)/colorresolution;
       }
 
       return (*this);
@@ -75,11 +75,10 @@ const CImg<T>& save_ppm(const char* filename, unsigned long colorresolution = 25
 	f << width()<<" "<<height()<<std::endl;
 	f << (unsigned long)(colorresolution) << std::endl;
 
-      cimg_forX((*this),x) {
-	      cimg_forY((*this),y) {
+      cimg_forY((*this),y) {
+	      cimg_forX((*this),x) {
 	            cimg_forC((*this),c) {
-			  std::cerr<<x<<" "<<y<<" "<<c<<" -> "<<(*this)(x,y,1,c)<<" * "<<double(colorresolution)<<" / "<<double(maxt)<<std::endl;
-		          f << std::setw(4)<<(unsigned long)(((*this)(x,y,1,c)*double(colorresolution))/double(maxt))<<" ";
+		          f << std::setw(4)<<(unsigned long)(((*this)(x,y,0,c)*double(colorresolution))/double(maxt))<<" ";
 		    } 
 		    f<<"    ";
 	      }
