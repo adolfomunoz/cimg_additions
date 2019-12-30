@@ -457,7 +457,6 @@ const CImg<T>& save_hdr(const char* filename) const
 
 CImg<T>& load_hdr(const char* filename)
 {
-	std::cerr<<"LOADING HDR : "<<filename<<std::endl;
 	if (!filename)
 		throw CImgArgumentException(_cimg_instance
 	                                    "load_hdr() : Specified filename is (null).",
