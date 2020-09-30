@@ -473,10 +473,10 @@ CImg<T>& load_hdr(const char* filename)
                               filename);
 	}
 
-    	int width, height;
-    	rgbe_header_info info;
+    int width, height;
+    rgbe_header_info info;
 
-    	if (RGBE_ReadHeader(f,&width,&height,&info)==RGBE_RETURN_FAILURE)
+    if (RGBE_ReadHeader(f,&width,&height,&info)==RGBE_RETURN_FAILURE)
 	{
 		cimg::fclose(f);
     		throw CImgIOException(_cimg_instance

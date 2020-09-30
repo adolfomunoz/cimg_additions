@@ -1,3 +1,4 @@
+project(mj2)
 cmake_minimum_required(VERSION 3.10)
 
 find_package(PNG)
@@ -53,8 +54,6 @@ include_directories(${CMAKE_CURRENT_LIST_DIR})
 ##################################################################################
 # EXTERNAL LIBRARIES
 ##################################################################################
-option(BUILD_OFFLINE "Build offline" OFF)
-
 if (NOT EXTERNAL_INSTALL_LOCATION)
 	set(EXTERNAL_INSTALL_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/external)
 endif()
@@ -63,24 +62,22 @@ if (NOT IS_DIRECTORY ${EXTERNAL_INSTALL_LOCATION})
 	file(MAKE_DIRECTORY ${EXTERNAL_INSTALL_LOCATION})
 endif()
 
-# If offline you can set -DBUILD_OFFLINE=ON so it does not try to update stuff
-if (${BUILD_OFFLINE})
-    set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-                 PROPERTY EP_UPDATE_DISCONNECTED 1)
-endif()
-
-
 include(ExternalProject)
-# callable_traits (useful for parameter-type deduction for general stuff)
+# External include directory
+include_directories(${EXTERNAL_INSTALL_LOCATION})
+add_custom_target(update)
 
 ExternalProject_Add(cimg
-  GIT_REPOSITORY https://framagit.org/dtschump/CImg.git 
+  GIT_REPOSITORY https://github.com/dtschump/CImg.git 
   SOURCE_DIR ${EXTERNAL_INSTALL_LOCATION}/CImg
+  UPDATE_DISCONNECTED 1
+  STEP_TARGETS update
   BUILD_COMMAND ""
   CONFIGURE_COMMAND ""
   INSTALL_COMMAND ""
 )
 
+add_dependencies(update cimg-update)
 
 include_directories(${EXTERNAL_INSTALL_LOCATION}/CImg)
 
@@ -98,4 +95,10 @@ endif()
 add_executable(image2ppm main/image2ppm.cc)
 target_compile_definitions(image2ppm PRIVATE ${cimg_defs})
 target_link_libraries(image2ppm ${cimg_libs})
+add_dependencies(image2ppm cimg)
+add_executable(tonemap main/tonemap.cc)
+target_compile_definitions(tonemap PRIVATE ${cimg_defs})
+target_link_libraries(tonemap ${cimg_libs})
+add_dependencies(tonemap cimg)
+	
 	

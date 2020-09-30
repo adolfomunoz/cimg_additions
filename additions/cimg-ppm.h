@@ -23,7 +23,7 @@ CImg<T>& load_ppm(const char *const filename) {
       unsigned int width(0), height(0);
       T colorresolution(0), maxt(0);
       
-      std::cerr<<"LOADING PPM"<<std::endl;
+      //std::cerr<<"LOADING PPM"<<std::endl;
       while (colorresolution == 0) {
       	      std::string line;
 	      std::getline(f,line);
@@ -43,10 +43,12 @@ CImg<T>& load_ppm(const char *const filename) {
       if (maxt == 0) maxt = 255;
 
       this->assign(width,height,1,3); T t;
-      cimg_forXYC((*this),x,y,c) {
-	      f>>t;
-      	      (*this)(x,y,0,c) = (t*maxt)/colorresolution;
-      }
+        cimg_forY((*this),y) {
+	      cimg_forX((*this),x) {
+	            cimg_forC((*this),c) {
+                    f>>t;
+                    (*this)(x,y,0,c) = (t*maxt)/colorresolution;
+        }}}
 
       return (*this);
 }
